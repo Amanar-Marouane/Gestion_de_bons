@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-//@Profile("seed") // Only run when --spring.profiles.active=seed
+@Profile("seed") // Only run when --spring.profiles.active=seed
 public class DatabaseSeeder implements CommandLineRunner {
 
     private final ProduitDAO produitDAO;
