@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CommandeFournisseurService  implements CommandeFournisseurContract{
+public class CommandeFournisseurService implements CommandeFournisseurContract {
 
     private final CommandeFournisseurDAO commandeFournisseurDAO;
     private final CommandeFournisseurMapper commandeFournisseurMapper;
@@ -40,8 +40,7 @@ public class CommandeFournisseurService  implements CommandeFournisseurContract{
             ProduitDAO produitDAO,
             LigneCommandeDAO ligneCommandeDAO,
             FournisseurDAO fournisseurDAO,
-            LigneCommandeMapper ligneCommandeMapper
-    ){
+            LigneCommandeMapper ligneCommandeMapper) {
         this.commandeFournisseurDAO = commandeFournisseurDAO;
         this.commandeFournisseurMapper = commandeFournisseurMapper;
         this.fournisseurService = fournisseurService;
@@ -52,13 +51,6 @@ public class CommandeFournisseurService  implements CommandeFournisseurContract{
         this.fournisseurDAO = fournisseurDAO;
         this.ligneCommandeMapper = ligneCommandeMapper;
     }
-
-//    @Override
-//    public CommandeFournisseurResponseDTO save(CommandeFournisseurCreateDTO CreateDto) {
-//        CommandeFournisseur commandeFournisseur = commandeFournisseurMapper.toEntityCreate(CreateDto);
-//        CommandeFournisseur saved = commandeFournisseurDAO.save(commandeFournisseur);
-//        return commandeFournisseurMapper.toResponseDto(saved);
-//    }
 
     @Transactional
     public CommandeFournisseurResponseDTO save(CommandeFournisseurCreateDTO createDto) {
@@ -89,12 +81,12 @@ public class CommandeFournisseurService  implements CommandeFournisseurContract{
 
     @Override
     public CommandeFournisseurResponseDTO update(Long id, CommandeFournisseurUpdateDTO updateDto) {
-
-        CommandeFournisseur existing = commandeFournisseurDAO.findById(id).orElseThrow(() -> new EntityNotFoundException("not found"));
+        CommandeFournisseur existing = commandeFournisseurDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("not found"));
         existing.setDateCommande(updateDto.getDateCommande());
         existing.setMontantTotal(updateDto.getMontantTotal());
         existing.setStatut(updateDto.getStatut());
-        if(updateDto.getFournisseurId() != null){
+        if (updateDto.getFournisseurId() != null) {
             Fournisseur fournisseur = new Fournisseur();
             fournisseur.setId(updateDto.getFournisseurId());
             existing.setFournisseur(fournisseur);
@@ -105,8 +97,6 @@ public class CommandeFournisseurService  implements CommandeFournisseurContract{
 
     @Override
     public CommandeFournisseurResponseDTO findById(Long id) {
-
-//        if(!commandeFournisseurDAO.existsById(id))
         return commandeFournisseurDAO.findById(id)
                 .map(commandeFournisseurMapper::toResponseDto)
                 .orElseThrow(() -> new EntityNotFoundException("Commande Fournisseur not found whit this Id !"));
@@ -121,10 +111,7 @@ public class CommandeFournisseurService  implements CommandeFournisseurContract{
 
     @Override
     public void delete(Long id) {
-//        Optional<CommandeFournisseur> commandeFournisseur = commandeFournisseurDAO.findById(id);
-//        commandeFournisseurDAO.delete(commandeFournisseur.get());
-
-        if(!commandeFournisseurDAO.existsById(id)){
+        if (!commandeFournisseurDAO.existsById(id)) {
             throw new EntityNotFoundException("Not Fount with this id");
         }
         commandeFournisseurDAO.deleteById(id);
@@ -132,13 +119,12 @@ public class CommandeFournisseurService  implements CommandeFournisseurContract{
 
     @Override
     public List<CommandeFournisseurResponseDTO> findByFournisseurId(Long fournisseurId) {
-        if (!fournisseurService.existes(fournisseurId)){
+        if (!fournisseurService.existes(fournisseurId)) {
             throw new EntityNotFoundException("There is no Fournisseur with this id");
         }
         return commandeFournisseurDAO.findByFournisseurId(fournisseurId).stream()
                 .map(commandeFournisseurMapper::toResponseDto).collect(Collectors.toList());
     }
-
 
     @Transactional
     public CommandeFournisseurResponseDTO receptionnerCommande(Long id) {
@@ -158,7 +144,7 @@ public class CommandeFournisseurService  implements CommandeFournisseurContract{
         return commandeFournisseurMapper.toResponseDto(saved);
     }
 
-    public CommandeFournisseurResponseDTO valideCommande(Long id){
+    public CommandeFournisseurResponseDTO valideCommande(Long id) {
         CommandeFournisseur commande = commandeFournisseurDAO.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Commande not found"));
 
