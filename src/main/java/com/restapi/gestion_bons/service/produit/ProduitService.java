@@ -1,6 +1,5 @@
 package com.restapi.gestion_bons.service.produit;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

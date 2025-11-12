@@ -1,13 +1,21 @@
 package com.restapi.gestion_bons.controller;
 
 import com.restapi.gestion_bons.contracts.BonDeSortieContract;
+import com.restapi.gestion_bons.dao.BonDeSortieDAO;
+import com.restapi.gestion_bons.dao.BonDeSortieLigneDAO;
 import com.restapi.gestion_bons.dto.bondesortie.BonDeSortieCreateDTO;
+import com.restapi.gestion_bons.dto.bondesortie.BonDeSortieLigneDTO;
 import com.restapi.gestion_bons.dto.bondesortie.BonDeSortieResponseDTO;
 import com.restapi.gestion_bons.dto.bondesortie.BonDeSortieUpdateDTO;
+import com.restapi.gestion_bons.entitie.BonDeSortie;
+import com.restapi.gestion_bons.entitie.BonDeSortieLigne;
+import com.restapi.gestion_bons.mapper.BonDeSortieLigneMapper;
+import com.restapi.gestion_bons.mapper.BonDeSortieMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +26,11 @@ import java.util.List;
 public class BonDeSortieController {
 
     private final BonDeSortieContract bonDeSortieService;
+    private final BonDeSortieDAO bonDeSortieDAO;
+    private final BonDeSortieLigneDAO bonDeSortieLigneDAO;
+    private final BonDeSortieLigneMapper bonDeSortieLigneMapper;
+    private final BonDeSortieMapper bonDeSortieMapper;
+
 
     @GetMapping
     public ResponseEntity<List<BonDeSortieResponseDTO>> listAll() {
@@ -30,6 +43,7 @@ public class BonDeSortieController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<BonDeSortieResponseDTO> create(@RequestBody @Valid BonDeSortieCreateDTO dto) {
         BonDeSortieResponseDTO created = bonDeSortieService.save(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);

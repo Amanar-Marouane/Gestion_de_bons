@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class BonDeSortieService implements BonDeSortieContract {
 
     private final BonDeSortieDAO bonDeSortieDAO;
+    private final BonDeSortieLigneDAO bonDeSortieLigneDAO;
     private final AtelierDAO atelierDAO;
     private final ProduitDAO produitDAO;
     private final LotDAO lotDAO;
@@ -62,6 +64,10 @@ public class BonDeSortieService implements BonDeSortieContract {
         bonDeSortie.setBonDeSortieLignes(lignes);
 
         BonDeSortie saved = bonDeSortieDAO.save(bonDeSortie);
+        saved.getBonDeSortieLignes().forEach(ligne -> {
+            ligne.setBonDeSortie(saved);
+            bonDeSortieLigneDAO.save(ligne);
+        });
         return bonDeSortieMapper.toResponseDto(saved);
     }
 
