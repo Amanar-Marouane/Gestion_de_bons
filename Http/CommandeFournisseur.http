@@ -3,7 +3,7 @@ GET http://localhost:8080/api/v1/commandes
 Accept: application/json
 
 ### Get Commande by ID
-GET http://localhost:8080/api/v1/commandes/1
+GET http://localhost:8080/api/v1/commandes/3
 Accept: application/json
 
 ### Create New Commande
@@ -48,11 +48,11 @@ GET http://localhost:8080/api/v1/commandes/fournisseur/1
 Accept: application/json
 
 ### Reception Commande (Change status to LIVREE)
-PUT http://localhost:8080/api/v1/commandes/1/reception
+PUT http://localhost:8080/api/v1/commandes/3/reception
 Accept: application/json
 
 ### Reception Commande (Change status to VALIDE)
-PUT http://localhost:8080/api/v1/commandes/1/valide
+PUT http://localhost:8080/api/v1/commandes/3/valide
 Accept: application/json
 
 ### Test with different IDs

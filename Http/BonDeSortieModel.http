@@ -15,11 +15,11 @@ Content-Type: application/json
   "lignes": [
     {
       "produitId": 1,
-      "quantiteDemandee": 50
+      "quantiteDemandee": 5
     },
     {
       "produitId": 2,
-      "quantiteDemandee": 30
+      "quantiteDemandee": 5
     }
   ]
 }
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ### Validate bon de sortie (déclenche sorties FIFO)
-PUT http://localhost:8080/api/v1/bons-sortie/1/valider
+PUT http://localhost:8080/api/v1/bons-sortie/3/valider
 
 ### Cancel bon de sortie brouillon
 PUT http://localhost:8080/api/v1/bons-sortie/2/annuler
