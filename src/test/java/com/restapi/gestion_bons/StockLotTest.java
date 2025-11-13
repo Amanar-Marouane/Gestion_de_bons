@@ -24,6 +24,7 @@ import com.restapi.gestion_bons.dao.CommandeFournisseurDAO;
 import com.restapi.gestion_bons.dao.FournisseurDAO;
 import com.restapi.gestion_bons.dao.LigneCommandeDAO;
 import com.restapi.gestion_bons.dao.LotDAO;
+import com.restapi.gestion_bons.dao.MouvementStockDAO;
 import com.restapi.gestion_bons.dao.ProduitDAO;
 import com.restapi.gestion_bons.dto.commandefournisseur.CommandeFournisseurResponseDTO;
 import com.restapi.gestion_bons.entitie.CommandeFournisseur;
@@ -56,6 +57,9 @@ public class StockLotTest {
 
     @Mock
     private CommandeFournisseurDAO commandeFournisseurDAO;
+
+    @Mock
+    private MouvementStockDAO mouvementStockDAO;
 
     @Mock
     private CommandeFournisseurMapper commandeFournisseurMapper;
