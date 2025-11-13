@@ -22,12 +22,10 @@ public interface BonDeSortieMapper {
     @Mapping(target = "numeroBon", ignore = true)
     @Mapping(target = "statut", ignore = true)
     @Mapping(target = "bonDeSortieLignes", ignore = true)
-    @Mapping(target = "mouvementsStocks", ignore = true)
     BonDeSortie toEntity(BonDeSortieCreateDTO dto);
 
     @Mapping(target = "atelier.id", source = "atelierId")
     @Mapping(target = "bonDeSortieLignes", ignore = true)
-    @Mapping(target = "mouvementsStocks", ignore = true)
     @Mapping(target = "statut", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "numeroBon", ignore = true)

@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 public class RelationalMouvementStockDTO extends BaseMouvementStockDTO {
     private ProduitResponseDTO produit;
     private LotRef lot;
-    private BonDeSortieRef bonDeSortie;
 
     @Data
     @NoArgsConstructor
@@ -21,14 +20,5 @@ public class RelationalMouvementStockDTO extends BaseMouvementStockDTO {
     public static class LotRef {
         private Long id;
         private String numeroLot;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class BonDeSortieRef {
-        private Long id;
-        private String numeroBon;
     }
 }

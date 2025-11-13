@@ -145,7 +145,6 @@ public class BonDeSortieValidationTest {
         assertEquals(50, mouvement.getQuantite());
         assertEquals(produit.getId(), mouvement.getProduit().getId());
         assertEquals(lot.getId(), mouvement.getLot().getId());
-        assertEquals(bonBrouillon.getId(), mouvement.getBonDeSortie().getId());
     }
 
     @Test
@@ -361,26 +360,5 @@ public class BonDeSortieValidationTest {
 
         assertEquals("Aucun lot disponible pour le produit: Produit Test", exception.getMessage());
         verify(mouvementStockDAO, never()).save(any(MouvementStock.class));
-    }
-
-    @Test
-    void testValidation_LienEntreMouvementEtBonDeSortie() {
-        when(bonDeSortieDAO.findById(1L)).thenReturn(Optional.of(bonBrouillon));
-        when(lotDAO.findByProduitIdAndStatutOrderByDateEntreeAsc(produit.getId(), LotStatus.DISPONIBLE))
-                .thenReturn(Arrays.asList(lot));
-        when(bonDeSortieDAO.save(any(BonDeSortie.class))).thenReturn(bonBrouillon);
-        when(bonDeSortieMapper.toResponseDto(any(BonDeSortie.class)))
-                .thenReturn(new BonDeSortieResponseDTO());
-
-        bonDeSortieService.valider(1L);
-
-        ArgumentCaptor<MouvementStock> mouvementCaptor = ArgumentCaptor.forClass(MouvementStock.class);
-        verify(mouvementStockDAO).save(mouvementCaptor.capture());
-
-        MouvementStock mouvement = mouvementCaptor.getValue();
-        assertNotNull(mouvement.getBonDeSortie(),
-                "Le mouvement doit être lié au bon de sortie");
-        assertEquals(bonBrouillon.getId(), mouvement.getBonDeSortie().getId(),
-                "Le mouvement doit référencer le bon de sortie correct");
     }
 }

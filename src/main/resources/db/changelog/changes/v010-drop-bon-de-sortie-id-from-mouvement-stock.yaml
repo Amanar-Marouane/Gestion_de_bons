@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: drop-bon-de-sortie-id-from-mouvement-stock
+      author: system
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: mouvement_stock
+            constraintName: fk_mouvement_stock_bon_de_sortie
+        - dropColumn:
+            tableName: mouvement_stock
+            columnName: bon_de_sortie_id

@@ -42,8 +42,4 @@ public class BonDeSortie {
     @JoinColumn(name = "atelier_destinataire_id", nullable = false)
     private Atelier atelier;
 
-    @OneToMany(mappedBy = "bonDeSortie", fetch = FetchType.LAZY)
-    @Builder.Default
-    private java.util.List<MouvementStock> mouvementsStocks = new ArrayList<>();
-
 }

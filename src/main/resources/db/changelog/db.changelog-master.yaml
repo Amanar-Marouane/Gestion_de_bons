@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changelog/changes/v008-create-bon-de-sortie-ligne.yaml
   - include:
       file: db/changelog/changes/v009-create-mouvement-stock.yaml
+  - include:
+      file: db/changelog/changes/v010-drop-bon-de-sortie-id-from-mouvement-stock.yaml

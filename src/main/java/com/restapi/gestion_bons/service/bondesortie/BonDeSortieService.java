@@ -205,7 +205,6 @@ public class BonDeSortieService implements BonDeSortieContract {
                     .prixUnitaireLot(lot.getPrixAchatUnitaire().doubleValue())
                     .produit(produit)
                     .lot(lot)
-                    .bonDeSortie(bonDeSortie)
                     .build();
 
             mouvementStockDAO.save(mouvement);

@@ -14,13 +14,10 @@ public interface MouvementStockMapper {
 
     @Mapping(target = "lot.numeroLot", source = "lot.numeroLot")
     @Mapping(target = "lot.id", source = "lot.id")
-    @Mapping(target = "bonDeSortie.numeroBon", source = "bonDeSortie.numeroBon")
-    @Mapping(target = "bonDeSortie.id", source = "bonDeSortie.id")
     MouvementStockResponseDTO toResponseDto(MouvementStock mouvementStock);
 
     @Mapping(target = "produit.id", source = "produitId")
     @Mapping(target = "lot.id", source = "lotId")
-    @Mapping(target = "bonDeSortie.id", source = "bonDeSortieId")
     MouvementStock toEntity(MouvementStockRequestDTO dto);
 
     List<MouvementStockResponseDTO> toResponseDtoList(List<MouvementStock> mouvements);

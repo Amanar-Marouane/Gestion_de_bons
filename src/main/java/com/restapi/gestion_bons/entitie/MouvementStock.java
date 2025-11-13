@@ -41,8 +41,4 @@ public class MouvementStock {
     @JoinColumn(name = "lot_id", nullable = false)
     private Lot lot;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bon_de_sortie_id", nullable = false)
-    private BonDeSortie bonDeSortie;
-
 }

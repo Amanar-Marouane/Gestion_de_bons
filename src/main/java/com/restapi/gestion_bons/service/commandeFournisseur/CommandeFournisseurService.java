@@ -12,7 +12,11 @@ import com.restapi.gestion_bons.mapper.CommandeFournisseurMapper;
 import com.restapi.gestion_bons.mapper.LigneCommandeMapper;
 import com.restapi.gestion_bons.service.fournisseur.FournisseurService;
 import com.restapi.gestion_bons.util.LotHelper;
+import com.restapi.gestion_bons.util.MouvementStockHelper;
+
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,37 +24,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class CommandeFournisseurService implements CommandeFournisseurContract {
 
     private final CommandeFournisseurDAO commandeFournisseurDAO;
     private final CommandeFournisseurMapper commandeFournisseurMapper;
     private final FournisseurService fournisseurService;
     private final LotDAO lotDAO;
+    private final MouvementStockDAO mouvementStockDAO;
     private final LotHelper lotHelper;
     private final ProduitDAO produitDAO;
     private final LigneCommandeDAO ligneCommandeDAO;
     private final FournisseurDAO fournisseurDAO;
     private final LigneCommandeMapper ligneCommandeMapper;
-
-    public CommandeFournisseurService(
-            CommandeFournisseurDAO commandeFournisseurDAO,
-            CommandeFournisseurMapper commandeFournisseurMapper,
-            FournisseurService fournisseurService, LotDAO lotDAO,
-            LotHelper lotHelper,
-            ProduitDAO produitDAO,
-            LigneCommandeDAO ligneCommandeDAO,
-            FournisseurDAO fournisseurDAO,
-            LigneCommandeMapper ligneCommandeMapper) {
-        this.commandeFournisseurDAO = commandeFournisseurDAO;
-        this.commandeFournisseurMapper = commandeFournisseurMapper;
-        this.fournisseurService = fournisseurService;
-        this.lotDAO = lotDAO;
-        this.lotHelper = lotHelper;
-        this.produitDAO = produitDAO;
-        this.ligneCommandeDAO = ligneCommandeDAO;
-        this.fournisseurDAO = fournisseurDAO;
-        this.ligneCommandeMapper = ligneCommandeMapper;
-    }
 
     @Transactional
     public CommandeFournisseurResponseDTO save(CommandeFournisseurCreateDTO createDto) {
@@ -139,6 +126,9 @@ public class CommandeFournisseurService implements CommandeFournisseurContract {
 
         List<Lot> lots = lotHelper.createLotsFromLignesCommande(commande);
         lotDAO.saveAll(lots);
+
+        List<MouvementStock> mvms = MouvementStockHelper.creaMouvementStocksFromLots(lots);
+        mouvementStockDAO.saveAll(mvms);
 
         CommandeFournisseur saved = commandeFournisseurDAO.save(commande);
         return commandeFournisseurMapper.toResponseDto(saved);
