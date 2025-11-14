@@ -1,17 +1,114 @@
+### ============================================
+### VARIABLES DYNAMIQUES
+### ============================================
+@baseUrl = http://localhost:8080/api/v1/stock
+@produitId = 1
+@lotId = 2
+@startDate = 2025-01-01T00:00:00
+@endDate = 2025-01-31T23:59:59
+
+### ============================================
+### STOCK GLOBAL ET DÉTAILS
+### ============================================
+
 ### Get stock global (état global du stock)
-GET http://localhost:8080/api/v1/stock
+GET {{baseUrl}}
 
 ### Get stock by produit ID (détail du stock par produit avec lots FIFO)
-GET http://localhost:8080/api/v1/stock/produit/1
-
-### Get all mouvements (historique des mouvements)
-GET http://localhost:8080/api/v1/stock/mouvements
-
-### Get mouvements by produit ID (mouvements d'un produit spécifique)
-GET http://localhost:8080/api/v1/stock/mouvements/produit/1
-
-### Get stock alerts (produits sous le seuil minimum)
-GET http://localhost:8080/api/v1/stock/alertes
+GET {{baseUrl}}/produit/{{produitId}}
 
 ### Get stock valorisation (valorisation totale du stock - méthode FIFO)
-GET http://localhost:8080/api/v1/stock/valorisation
+GET {{baseUrl}}/valorisation
+
+### Get stock alerts (produits sous le seuil minimum)
+GET {{baseUrl}}/alertes
+
+### ============================================
+### MOUVEMENTS DE STOCK
+### ============================================
+
+### Get all mouvements (historique des mouvements)
+GET {{baseUrl}}/mouvements
+
+### Get mouvements by produit ID (mouvements d'un produit spécifique)
+GET {{baseUrl}}/mouvements/produit/{{produitId}}
+
+### Get mouvements by lot ID (mouvements d'un lot spécifique)
+GET {{baseUrl}}/mouvements/lot/{{lotId}}
+
+### Get mouvements de type SORTIE
+GET {{baseUrl}}/mouvements/type/sortie
+
+### Get mouvements de type ENTREE
+GET {{baseUrl}}/mouvements/type/entree
+
+### Get mouvements by date interval
+GET {{baseUrl}}/mouvements/date?start={{startDate}}&end={{endDate}}
+
+### ============================================
+### EXEMPLES AVEC DIFFÉRENTES PÉRIODES
+### ============================================
+
+### Mouvements du jour
+@today = 2025-01-15T00:00:00
+@todayEnd = 2025-01-15T23:59:59
+GET {{baseUrl}}/mouvements/date?start={{today}}&end={{todayEnd}}
+
+### Mouvements de la semaine dernière
+@weekAgo = 2025-01-08T00:00:00
+@weekEnd = 2025-01-14T23:59:59
+GET {{baseUrl}}/mouvements/date?start={{weekAgo}}&end={{weekEnd}}
+
+### Mouvements du mois en cours
+@monthStart = 2025-01-01T00:00:00
+@monthEnd = 2025-01-31T23:59:59
+GET {{baseUrl}}/mouvements/date?start={{monthStart}}&end={{monthEnd}}
+
+### Mouvements des 3 derniers mois
+@threeMonthsAgo = 2025-10-15%2000:00:00
+@now = 2026-01-15%2023:59:59
+GET {{baseUrl}}/mouvements/date?start={{threeMonthsAgo}}&end={{now}}
+
+### ============================================
+### TESTS PAR PRODUIT
+### ============================================
+
+### Stock détaillé produit 1
+@prod1 = 1
+GET {{baseUrl}}/produit/{{prod1}}
+
+### Mouvements produit 1
+GET {{baseUrl}}/mouvements/produit/{{prod1}}
+
+### Stock détaillé produit 4
+@prod4 = 4
+GET {{baseUrl}}/produit/{{prod4}}
+
+### Mouvements produit 4
+GET {{baseUrl}}/mouvements/produit/{{prod4}}
+
+### ============================================
+### TESTS PAR LOT
+### ============================================
+
+### Mouvements lot 1
+@lot1 = 1
+GET {{baseUrl}}/mouvements/lot/{{lot1}}
+
+### Mouvements lot 2
+@lot2 = 2
+GET {{baseUrl}}/mouvements/lot/{{lot2}}
+
+### Mouvements lot 3
+@lot3 = 3
+GET {{baseUrl}}/mouvements/lot/{{lot3}}
+
+### ============================================
+### ANALYSE PAR TYPE DE MOUVEMENT
+### ============================================
+
+### Toutes les entrées de stock (réceptions commandes)
+GET {{baseUrl}}/mouvements/type/entree
+
+### Toutes les sorties de stock (bons de sortie)
+GET {{baseUrl}}/mouvements/type/sortie
