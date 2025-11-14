@@ -7,6 +7,9 @@ import com.restapi.gestion_bons.entitie.enums.TypeMouvement;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +35,18 @@ public class StockController {
     }
 
     @GetMapping("/mouvements")
-    public ResponseEntity<List<MouvementStockResponseDTO>> getMouvements() {
-        return ResponseEntity.ok(stockService.getMouvements());
-    }
+    public ResponseEntity<Page<MouvementStockResponseDTO>> getMouvements(
+            @RequestParam(required = false) Long produitId,
+            @RequestParam(required = false) Long lotId,
+            @RequestParam(required = false) TypeMouvement type,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-    @GetMapping("/mouvements/produit/{id}")
-    public ResponseEntity<List<MouvementStockResponseDTO>> getMouvementsByProduitId(@PathVariable Long id) {
-        return ResponseEntity.ok(stockService.getMouvementsByProduitId(id));
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity
+                .ok(stockService.getMouvementsByCriteria(produitId, lotId, type, startDate, endDate, pageable));
     }
 
     @GetMapping("/alertes")
@@ -50,30 +58,4 @@ public class StockController {
     public ResponseEntity<StockValorisationDTO> getValorisation() {
         return ResponseEntity.ok(stockService.getValorisation());
     }
-
-    @GetMapping("/mouvements/lot/{id}")
-    public ResponseEntity<List<MouvementStockResponseDTO>> getMouvementsByLotId(@PathVariable Long id) {
-        return ResponseEntity.ok(stockService.getMouvementsByLotId(id));
-    }
-
-    @GetMapping("/mouvements/type/sortie") // by mouvement type
-    public ResponseEntity<List<MouvementStockResponseDTO>> getSortieMouvements() {
-        return ResponseEntity.ok(stockService.getMouvementsByTypeMouvement(TypeMouvement.SORTIE));
-    }
-
-    @GetMapping("/mouvements/type/entree") // by mouvement type
-    public ResponseEntity<List<MouvementStockResponseDTO>> getEntreeMouvements() {
-        return ResponseEntity.ok(stockService.getMouvementsByTypeMouvement(TypeMouvement.ENTREE));
-    }
-
-    @GetMapping("/mouvements/date")
-    public ResponseEntity<List<MouvementStockResponseDTO>> getMouvementsByDateInterval(
-            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end) {
-        System.out.println("START = " + start);
-        System.out.println("END = " + end);
-
-        return ResponseEntity.ok(stockService.getMouvementsByDateInterval(start, end));
-    }
-
 }

@@ -4,8 +4,10 @@
 @baseUrl = http://localhost:8080/api/v1/stock
 @produitId = 1
 @lotId = 2
-@startDate = 2025-01-01T00:00:00
-@endDate = 2025-01-31T23:59:59
+@startDate = 2025-01-01 00:00:00
+@endDate = 2025-01-31 23:59:59
+@page = 0
+@size = 2
 
 ### ============================================
 ### STOCK GLOBAL ET DÉTAILS
@@ -24,91 +26,133 @@ GET {{baseUrl}}/valorisation
 GET {{baseUrl}}/alertes
 
 ### ============================================
-### MOUVEMENTS DE STOCK
+### MOUVEMENTS DE STOCK - ENDPOINT UNIFIÉ
 ### ============================================
 
-### Get all mouvements (historique des mouvements)
-GET {{baseUrl}}/mouvements
+### Get all mouvements (historique complet) avec pagination
+GET {{baseUrl}}/mouvements?page={{page}}&size={{size}}
 
-### Get mouvements by produit ID (mouvements d'un produit spécifique)
-GET {{baseUrl}}/mouvements/produit/{{produitId}}
+### Get mouvements by produit ID avec pagination
+GET {{baseUrl}}/mouvements?produitId={{produitId}}&page={{page}}&size={{size}}
 
-### Get mouvements by lot ID (mouvements d'un lot spécifique)
-GET {{baseUrl}}/mouvements/lot/{{lotId}}
+### Get mouvements by lot ID avec pagination
+GET {{baseUrl}}/mouvements?lotId={{lotId}}&page={{page}}&size={{size}}
 
-### Get mouvements de type SORTIE
-GET {{baseUrl}}/mouvements/type/sortie
+### Get mouvements de type SORTIE avec pagination
+GET {{baseUrl}}/mouvements?type=SORTIE&page={{page}}&size={{size}}
 
-### Get mouvements de type ENTREE
-GET {{baseUrl}}/mouvements/type/entree
+### Get mouvements de type ENTREE avec pagination
+GET {{baseUrl}}/mouvements?type=ENTREE&page={{page}}&size={{size}}
 
-### Get mouvements by date interval
-GET {{baseUrl}}/mouvements/date?start={{startDate}}&end={{endDate}}
-
-### ============================================
-### EXEMPLES AVEC DIFFÉRENTES PÉRIODES
-### ============================================
-
-### Mouvements du jour
-@today = 2025-01-15T00:00:00
-@todayEnd = 2025-01-15T23:59:59
-GET {{baseUrl}}/mouvements/date?start={{today}}&end={{todayEnd}}
-
-### Mouvements de la semaine dernière
-@weekAgo = 2025-01-08T00:00:00
-@weekEnd = 2025-01-14T23:59:59
-GET {{baseUrl}}/mouvements/date?start={{weekAgo}}&end={{weekEnd}}
-
-### Mouvements du mois en cours
-@monthStart = 2025-01-01T00:00:00
-@monthEnd = 2025-01-31T23:59:59
-GET {{baseUrl}}/mouvements/date?start={{monthStart}}&end={{monthEnd}}
-
-### Mouvements des 3 derniers mois
-@threeMonthsAgo = 2025-10-15%2000:00:00
-@now = 2026-01-15%2023:59:59
-GET {{baseUrl}}/mouvements/date?start={{threeMonthsAgo}}&end={{now}}
+### Get mouvements by date interval avec pagination
+GET {{baseUrl}}/mouvements?startDate={{startDate}}&endDate={{endDate}}&page={{page}}&size={{size}}
 
 ### ============================================
-### TESTS PAR PRODUIT
+### COMBINAISONS DE FILTRES AVEC PAGINATION
 ### ============================================
+
+### Mouvements d'un produit sur une période avec pagination
+GET {{baseUrl}}/mouvements?produitId={{produitId}}&startDate={{startDate}}&endDate={{endDate}}&page={{page}}&
+    size={{size}}
+
+### Sorties d'un produit spécifique avec pagination
+GET {{baseUrl}}/mouvements?produitId={{produitId}}&type=SORTIE&page={{page}}&size={{size}}
+
+### Entrées sur une période avec pagination
+GET {{baseUrl}}/mouvements?type=ENTREE&startDate={{startDate}}&endDate={{endDate}}&page={{page}}&size={{size}}
+
+### Mouvements d'un lot avec type et pagination
+GET {{baseUrl}}/mouvements?lotId={{lotId}}&type=SORTIE&page={{page}}&size={{size}}
+
+### Recherche complète (tous les critères) avec pagination
+GET {{baseUrl}}/mouvements?produitId={{produitId}}&lotId={{lotId}}&type=ENTREE&startDate={{startDate}}&
+    endDate={{endDate}}&page={{page}}&size={{size}}
+
+### ============================================
+### EXEMPLES AVEC DIFFÉRENTES TAILLES DE PAGE
+### ============================================
+
+### Première page (5 éléments)
+GET {{baseUrl}}/mouvements?page=0&size=5
+
+### Deuxième page (5 éléments)
+GET {{baseUrl}}/mouvements?page=1&size=5
+
+### Page avec 20 éléments
+GET {{baseUrl}}/mouvements?page=0&size=20
+
+### Page avec 50 éléments
+GET {{baseUrl}}/mouvements?page=0&size=50
+
+### ============================================
+### EXEMPLES PAR PÉRIODE AVEC PAGINATION
+### ============================================
+
+### Mouvements du jour avec pagination
+@today = 2025-01-15 00:00:00
+@todayEnd = 2025-01-15 23:59:59
+GET {{baseUrl}}/mouvements?startDate={{today}}&endDate={{todayEnd}}&page={{page}}&size={{size}}
+
+### Mouvements de la semaine dernière avec pagination
+@weekAgo = 2025-01-08 00:00:00
+@weekEnd = 2025-01-14 23:59:59
+GET {{baseUrl}}/mouvements?startDate={{weekAgo}}&endDate={{weekEnd}}&page={{page}}&size={{size}}
+
+### Mouvements du mois en cours avec pagination
+@monthStart = 2025-01-01 00:00:00
+@monthEnd = 2025-01-31 23:59:59
+GET {{baseUrl}}/mouvements?startDate={{monthStart}}&endDate={{monthEnd}}&page={{page}}&size={{size}}
+
+### Sorties du mois pour un produit avec pagination
+@prod4 = 4
+GET {{baseUrl}}/mouvements?produitId={{prod4}}&type=SORTIE&startDate={{monthStart}}&endDate={{monthEnd}}&page={{page}}&
+    size={{size}}
+
+### ============================================
+### TESTS PAR PRODUIT AVEC PAGINATION
+### ============================================
+
+### Tous les mouvements du produit 1 avec pagination
+@prod1 = 1
+GET {{baseUrl}}/mouvements?produitId={{prod1}}&page={{page}}&size={{size}}
+
+### Sorties du produit 1 avec pagination
+GET {{baseUrl}}/mouvements?produitId={{prod1}}&type=SORTIE&page={{page}}&size={{size}}
+
+### Entrées du produit 1 avec pagination
+GET {{baseUrl}}/mouvements?produitId={{prod1}}&type=ENTREE&page={{page}}&size={{size}}
 
 ### Stock détaillé produit 1
-@prod1 = 1
 GET {{baseUrl}}/produit/{{prod1}}
 
-### Mouvements produit 1
-GET {{baseUrl}}/mouvements/produit/{{prod1}}
-
-### Stock détaillé produit 4
-@prod4 = 4
-GET {{baseUrl}}/produit/{{prod4}}
-
-### Mouvements produit 4
-GET {{baseUrl}}/mouvements/produit/{{prod4}}
-
 ### ============================================
-### TESTS PAR LOT
+### TESTS PAR LOT AVEC PAGINATION
 ### ============================================
 
-### Mouvements lot 1
+### Tous les mouvements du lot 1 avec pagination
 @lot1 = 1
-GET {{baseUrl}}/mouvements/lot/{{lot1}}
+GET {{baseUrl}}/mouvements?lotId={{lot1}}&page={{page}}&size={{size}}
 
-### Mouvements lot 2
+### Sorties du lot 2 avec pagination
 @lot2 = 2
-GET {{baseUrl}}/mouvements/lot/{{lot2}}
+GET {{baseUrl}}/mouvements?lotId={{lot2}}&type=SORTIE&page={{page}}&size={{size}}
 
-### Mouvements lot 3
+### Mouvements du lot 3 sur période avec pagination
 @lot3 = 3
-GET {{baseUrl}}/mouvements/lot/{{lot3}}
+GET {{baseUrl}}/mouvements?lotId={{lot3}}&startDate={{startDate}}&endDate={{endDate}}&page={{page}}&size={{size}}
 
 ### ============================================
-### ANALYSE PAR TYPE DE MOUVEMENT
+### ANALYSE PAR TYPE AVEC PAGINATION
 ### ============================================
 
-### Toutes les entrées de stock (réceptions commandes)
-GET {{baseUrl}}/mouvements/type/entree
+### Toutes les entrées de stock avec pagination
+GET {{baseUrl}}/mouvements?type=ENTREE&page={{page}}&size={{size}}
 
-### Toutes les sorties de stock (bons de sortie)
-GET {{baseUrl}}/mouvements/type/sortie
+### Toutes les sorties de stock avec pagination
+GET {{baseUrl}}/mouvements?type=SORTIE&page={{page}}&size={{size}}
+
+### Entrées du dernier mois avec pagination
+GET {{baseUrl}}/mouvements?type=ENTREE&startDate={{monthStart}}&endDate={{monthEnd}}&page={{page}}&size={{size}}
+
+### Sorties du dernier mois avec pagination
+GET {{baseUrl}}/mouvements?type=SORTIE&startDate={{monthStart}}&endDate={{monthEnd}}&page={{page}}&size={{size}}

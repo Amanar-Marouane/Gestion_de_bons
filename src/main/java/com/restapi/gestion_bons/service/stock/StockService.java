@@ -15,7 +15,10 @@ import com.restapi.gestion_bons.entitie.Produit;
 import com.restapi.gestion_bons.entitie.enums.LotStatus;
 import com.restapi.gestion_bons.entitie.enums.TypeMouvement;
 import com.restapi.gestion_bons.mapper.MouvementStockMapper;
+import com.restapi.gestion_bons.specification.MouvementStockSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,34 +105,19 @@ public class StockService implements StockContract {
 
         @Override
         @Transactional(readOnly = true)
-        public List<MouvementStockResponseDTO> getMouvements() {
-                return mouvementStockDAO.findAllByOrderByDateMouvementDesc().stream()
-                                .map(mouvementStockMapper::toResponseDto)
-                                .collect(Collectors.toList());
-        }
+        public Page<MouvementStockResponseDTO> getMouvementsByCriteria(
+                        Long produitId,
+                        Long lotId,
+                        TypeMouvement type,
+                        LocalDateTime startDate,
+                        LocalDateTime endDate,
+                        Pageable pageable) {
 
-        @Override
-        @Transactional(readOnly = true)
-        public List<MouvementStockResponseDTO> getMouvementsByProduitId(Long produitId) {
-                if (!produitDAO.existsById(produitId)) {
-                        throw new EntityNotFoundException("Produit non trouvé avec l'id: " + produitId);
-                }
+                Page<MouvementStock> mouvements = mouvementStockDAO.findAll(
+                                MouvementStockSpecification.withCriteria(produitId, lotId, type, startDate, endDate),
+                                pageable);
 
-                return mouvementStockDAO.findByProduitIdOrderByDateMouvementDesc(produitId).stream()
-                                .map(mouvementStockMapper::toResponseDto)
-                                .collect(Collectors.toList());
-        }
-
-        @Override
-        @Transactional(readOnly = true)
-        public List<MouvementStockResponseDTO> getMouvementsByLotId(Long lotId) {
-                if (!produitDAO.existsById(lotId)) {
-                        throw new EntityNotFoundException("Lot non trouvé avec l'id: " + lotId);
-                }
-
-                return mouvementStockDAO.findByLotIdOrderByDateMouvementDesc(lotId).stream()
-                                .map(mouvementStockMapper::toResponseDto)
-                                .collect(Collectors.toList());
+                return mouvements.map(mouvementStockMapper::toResponseDto);
         }
 
         @Override
@@ -201,18 +189,4 @@ public class StockService implements StockContract {
                                                 .multiply(BigDecimal.valueOf(lot.getQuantiteRestante())))
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         }
-
-        @Override
-        public List<MouvementStockResponseDTO> getMouvementsByTypeMouvement(TypeMouvement type) {
-                List<MouvementStock> stocks = mouvementStockDAO.findAllByTypeMouvementOrderByDateMouvementDesc(type);
-                return mouvementStockMapper.toResponseDtoList(stocks);
-        }
-
-        @Override
-        public List<MouvementStockResponseDTO> getMouvementsByDateInterval(LocalDateTime start, LocalDateTime end) {
-                List<MouvementStock> stocks = mouvementStockDAO
-                                .findByDateMouvementBetweenOrderByDateMouvementDesc(start, end);
-                return mouvementStockMapper.toResponseDtoList(stocks);
-        }
-
 }
